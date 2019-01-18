@@ -13,6 +13,9 @@ const app = express();
 app.use(bodyParser.json());
 app.use(logger('dev'));
 
+// CORS
+app.use(cors());
+
 // mongoose
 const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost:27017/restapi', {
@@ -58,9 +61,6 @@ app.use((err, req, res, next) => {
     error: {},
   });
 });
-
-// CORS
-app.use(cors());
 
 // set our port
 app.set('port', process.env.PORT || 5000);

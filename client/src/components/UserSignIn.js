@@ -1,29 +1,46 @@
+// imports
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import { withRouter } from "react-router-dom";
+import PropTypes from 'prop-types';
 
 class UserSignIn extends Component {
+
+  static propTypes = {
+    user: PropTypes.object,
+    signIn: PropTypes.func
+  };
+
+  state = {
+    emailAddress: '',
+    password: ''
+  }
+  onChange = event => {
+    this.setState({ [event.target.name]: event.target.value });
+  }
+
+  onSubmit = event => {
+    event.preventDefault();
+    this.props.signIn(this.state.emailAddress, this.state.password, this.props.history);
+  }
+
   render() {
     return (
       <div id="root">
         <div>
-          <div className="header">
-            <div className="bounds">
-              <h1 className="header--logo">Courses</h1>
-              <nav><a className="signup" href="sign-up.html">Sign Up</a><a className="signin" href="sign-in.html">Sign In</a></nav>
-            </div>
-          </div>
           <hr />
           <div className="bounds">
             <div className="grid-33 centered signin">
               <h1>Sign In</h1>
               <div>
-                <form>
-                  <div><input id="emailAddress" name="emailAddress" type="text" className="" placeholder="Email Address" value="" /></div>
-                  <div><input id="password" name="password" type="password" className="" placeholder="Password" value="" /></div>
-                  <div className="grid-100 pad-bottom"><button className="button" type="submit">Sign In</button><button className="button button-secondary" onclick="event.preventDefault(); location.href='index.html';">Cancel</button></div>
+                <form onSubmit={this.onSubmit}>
+                  <div><input onChange={this.onChange} id="emailAddress" name="emailAddress" type="text" className="" placeholder="Email Address" /></div>
+                  <div><input onChange={this.onChange} id="password" name="password" type="password" className="" placeholder="Password" /></div>
+                  <div className="grid-100 pad-bottom"><button className="button" type="submit">Sign In</button><button onClick={() => this.props.history.push("/")} className="button button-secondary">Cancel</button></div>
                 </form>
               </div>
               <p>&nbsp;</p>
-              <p>Don't have a user account? <a href="sign-up.html">Click here</a> to sign up!</p>
+              <p>Don't have a user account? <Link to="/signup">Click Here</Link> to sign up!</p>
             </div>
           </div>
         </div>
@@ -32,4 +49,4 @@ class UserSignIn extends Component {
   }
 }
 
-export default UserSignIn;
+export default withRouter(UserSignIn);

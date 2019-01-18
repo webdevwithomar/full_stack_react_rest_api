@@ -1,25 +1,29 @@
 import React, { Component } from 'react';
+import axios from 'axios';
+import { BrowserRouter, Route } from 'react-router-dom';
+import Courses from './components/Courses';
+import CourseDetail from './components/CourseDetail';
+import CreateCourse from './components/CreateCourse';
+import UserSignIn from './components/UserSignIn';
+import UserSignUp from './components/UserSignUp';
+import UserSignOut from './components/UserSignOut';
+import UpdateCourse from './components/UpdateCourse';
 import './App.css';
 
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
+      <BrowserRouter>
+        <div className="App">
+          <Route path="/" render={props => <Courses />} />
+          <Route path="/courses/create" render={props => <CreateCourse />} />
+          <Route path="/courses/:id/update" render={props => <UpdateCourse />} />
+          <Route path="/courses/:id" render={props => <CourseDetail />} />
+          <Route path="/signin" render={props => <UserSignIn />} />
+          <Route path="/signup" render={props => <UserSignUp />} />
+          <Route path="/signout" render={props => <UserSignOut />} />
+        </div>
+      </BrowserRouter>
     );
   }
 }

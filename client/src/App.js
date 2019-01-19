@@ -60,10 +60,10 @@ class App extends Component {
         <div className="App">
           <Route path="/" render={props => <Header user={user} />} />
           <Switch>
-            <Route exact path="/" render={props => <Courses />} />
-            <Route exact path="/courses/create" render={props => <CreateCourse />} />
+            <Route exact path="/" render={props => <Courses user={user} />} />
+            <Route exact path="/courses/create" render={props => <CreateCourse user={user} />} />
             <Route path="/courses/:id/update" render={props => <UpdateCourse />} />
-            <Route exact path="/courses/:id" render={props => <CourseDetail />} />
+            <Route exact path="/courses/:id" render={props => <CourseDetail id={props.match.params.id} user={user} />} />
             <Route path="/signin" render={props => <UserSignIn signIn={this.signIn} history={props.path} />} />
             <Route path="/signup" render={() => loggedIn ? (<Redirect to="/" />) : (<UserSignUp />)} />
             <Route path="/signout" render={props => <UserSignOut />} />

@@ -18,7 +18,7 @@ app.use(cors());
 
 // mongoose
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/restapi', {
+mongoose.connect('mongodb://localhost:27017/fsjstd-restapi', {
   useCreateIndex: true,
   useNewUrlParser: true
 });

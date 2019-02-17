@@ -1,133 +1,143 @@
-// imports
 import React, { Component } from 'react';
-import axios from "axios";
 import { Link, withRouter } from "react-router-dom";
+import axios from "axios";
 
 class UserSignUp extends Component {
 
+
   state = {
-    firstName: '',
-    lastName: '',
-    emailAddress: '',
-    password: '',
-    confirmPassword: '',
-    error: '',
-    pass: ''
+    firstName: "",
+    lastName: "",
+    emailAddress: "",
+    password: "",
+    confirmPassword: "",
+    validationError: false,
+    validationMessage: "",
+    firstNameMissing: "",
+    lastNameMissing: "",
+    emailMissing: "",
+    emailFormatError: "",
+    emailDuplicateError: "",
+    passwordMissing: "",
+    passwordMistmatch: ""
   }
 
-  // validation
-  validation = () => {
-    if (this.state.firstName &&
-      this.state.lastName &&
-      this.state.emailAddress &&
-      this.state.password === this.state.confirmPassword) {
-      return true
+  firstNameEntered = e => {
+    this.setState({ firstName: e.target.value });
+  }
+
+  lastNameEntered = e => {
+    this.setState({ lastName: e.target.value });
+  }
+
+  emailAddressEntered = e => {
+    this.setState({ emailAddress: e.target.value });
+  }
+
+  passwordEntered = e => {
+    this.setState({ password: e.target.value });
+  }
+
+  confirmPasswordEntered = e => {
+    this.setState({ confirmPassword: e.target.value });
+  }
+
+  //Compares two passwords, if they don't match it sets a validation error and won't let signup happen
+  checkPasswords = () => {
+    if (this.state.password !== this.state.confirmPassword) {
+      this.setState({ validationError: true, validationMessage: "Validation Error", passwordMismatch: "Passwords do not match" })
+      return false;
     } else {
-      return false
+      return true;
     }
   }
 
-  onChange = event => {
-    this.setState({ [event.target.name]: event.target.value })
-  }
-
-  //signUp user, send POST request
-  onSubmit = (e) => {
-    const { firstName,
-      lastName,
-      emailAddress,
-      password
-    } = this.state;
-    const newUser = {
-      firstName,
-      lastName,
-      emailAddress,
-      password
-    }
+  //If passwords match, signs up user
+  uponSubmit = e => {
     e.preventDefault();
-    if (this.validation()) {
-      axios.post("http://localhost:5000/api/users", newUser)
-        .then(response => {
-          if (response.status === 201) {
-            this.props.history.push("/signin");
+    if (this.checkPasswords()) {
+      this.signUp(this.state.firstName, this.state.lastName, this.state.emailAddress, this.state.password);
+    }
+  }
+
+  signUp = (firstName, lastName, emailAddress, password) => {
+    axios.post('http://localhost:5000/api/users', {
+      firstName: firstName,
+      lastName: lastName,
+      emailAddress: emailAddress,
+      password: password
+    })
+      //After adding them to database, signs them in
+      .then(response => {
+        this.props.signIn(this.state.emailAddress, this.state.password);
+      })
+      //Takes them back to where they were
+      .then(response => {
+        this.props.history.goBack();
+      })
+      //Catches validation errors, displays appropriate messages
+      .catch(error => {
+        if (error.response.status === 400) {
+          this.setState({ validationError: true, validationMessage: "Validation Error" });
+          if (error.response.data.message === "Email must be correctly formatted (name@example.com)") {
+            this.setState({ emailFormatError: "Email must be correctly formatted (name@example.com)" })
           }
-        })
-        .catch(error => {
-          if (error) {
-            this.setState({
-              pass: true
-            });
-            console.log("Error changing password")
+          if (error.response.data.message === "First name is required") {
+            this.setState({ firstNameMissing: "First name is required" })
           }
-        });
-    } else {
-      console.log('Please fill all the required fields')
-    }
-  }
-
-  //check validation on each field
-  checkIfValid = val => {
-    let checkIfValid;
-    if (val) {
-      checkIfValid = '';
-    } else {
-      checkIfValid = "Please fill in the box"
-    }
-    return checkIfValid;
-  }
-
-  //check matched passwords
-  checkValidPass = (pass, confirm) => {
-    let checkValid;
-    if (pass !== confirm) {
-      checkValid = "Passwords must match";
-    } else {
-      checkValid = ""
-    }
-    return checkValid
-  }
-
-  //check password
-  checkPass = (pass) => {
-    if (pass) {
-      let error = "Something went wrong";
-      return error;
-    }
+          if (error.response.data.message === "Last name is required") {
+            this.setState({ lastNameMissing: "Last name is required" })
+          }
+          if (error.response.data.message === "Email address is required") {
+            this.setState({ emailMissing: "Email address is required" })
+          }
+          if (error.response.data.message === "That email is already associated with another account") {
+            this.setState({ emailDuplicateError: "That email is already associated with another account" })
+          }
+          if (error.response.data.message === "Password is required") {
+            this.setState({ passwordMissing: "Password is required" })
+          }
+        } else
+          if (error.response.status === 500) {
+            this.props.history.push('/error');
+          }
+      })
   }
 
   render() {
     return (
-      <div id="root">
-        <div>
-          <hr />
-          <div className="bounds">
-            <div className="grid-33 centered signin">
-              <h1>Sign Up</h1>
-              <div>
-                <form onSubmit={this.onSubmit}>
-                  <div><input onChange={this.onChange} id="firstName" name="firstName" type="text" className="" placeholder="First Name" value={this.state.firstName} />
-                    <div className="checkIfValid">{this.checkIfValid(this.state.firstName)}</div>
-                  </div>
-                  <div><input onChange={this.onChange} id="lastName" name="lastName" type="text" className="" placeholder="Last Name" value={this.state.lastName} />
-                    <div className="checkIfValid">{this.checkIfValid(this.state.lastName)}</div>
-                  </div>
-                  <div><input onChange={this.onChange} id="emailAddress" name="emailAddress" type="text" className="" placeholder="Email Address" value={this.state.emailAddress} />
-                    <div className="checkIfValid">{this.checkIfValid(this.state.emailAddress)}</div>
-                  </div>
-                  <div><input onChange={this.onChange} id="password" name="password" type="password" className="" placeholder="Password" value={this.state.password} />
-                    <div className="checkIfValid">{this.checkPass(this.state.pass)}</div>
-                  </div>
-                  <div><input onChange={this.onChange} id="confirmPassword" name="confirmPassword" type="password" className="" placeholder="Confirm Password"
-                    value={this.state.confirmPassword} />
-                    <div className="checkIfValid">{this.checkIfValid(this.state.password)}</div>
-                  </div>
-                  <div className="grid-100 pad-bottom"><button className="button" type="submit">Sign Up</button><button onClick={() => this.props.history.push("/")} className="button button-secondary" >Cancel</button></div>
-                </form>
+      <div className="bounds">
+        <div className="grid-33 centered signin">
+          <h1>Sign Up</h1>
+          <div>
+            <div>
+              <h2 className="validation--errors--label">{this.state.validationMessage}</h2>
+              <div className="validation-errors">
+                <ul>
+                  <li>{this.state.firstNameMissing}</li>
+                  <li>{this.state.lastNameMissing}</li>
+                  <li>{this.state.emailMissing}</li>
+                  <li>{this.state.emailFormatError}</li>
+                  <li>{this.state.emailDuplicateError}</li>
+                  <li>{this.state.passwordMissing}</li>
+                  <li>{this.state.passwordMismatch}</li>
+                </ul>
               </div>
-              <p>&nbsp;</p>
-              <p>Already have a user account? <Link to="/signin">Click here</Link> to sign in!</p>
             </div>
+            <form onSubmit={this.uponSubmit}>
+              <div><input onChange={this.firstNameEntered} id="firstName" name="firstName" type="text" className="" placeholder="First Name" /></div>
+              <div><input onChange={this.lastNameEntered} id="lastName" name="lastName" type="text" className="" placeholder="Last Name" /></div>
+              <div><input onChange={this.emailAddressEntered} id="emailAddress" name="emailAddress" type="text" className="" placeholder="Email Address" /></div>
+              <div><input onChange={this.passwordEntered} id="password" name="password" type="password" className="" placeholder="Password" /></div>
+              <div><input onChange={this.confirmPasswordEntered} id="confirmPassword" name="confirmPassword" type="password" className="" placeholder="Confirm Password" /></div>
+              <div className="grid-100 pad-bottom">
+                <button className="button" type="submit">Sign Up</button>
+                <Link to={"/"}><button className="button button-secondary">Cancel</button></Link>
+              </div>
+            </form>
           </div>
+          <p>&nbsp;</p>
+          <p>Already have a user account? <Link to="/signin">Click here</Link> to sign in!</p>
         </div>
       </div>
     )

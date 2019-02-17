@@ -4,12 +4,11 @@ import axios from 'axios';
 import Course from "./Course";
 
 class Courses extends Component {
-
   state = {
     courses: []
   }
 
-  // Fetches course list from api
+  // GET course list
   componentDidMount() {
     axios.get('http://localhost:5000/api/courses')
       .then(response => {
@@ -28,7 +27,6 @@ class Courses extends Component {
     return (
       <div>
         <div className="bounds">
-          {/* Adds a preview box for each course to the index. Looked at my project 7 to see how I mapped through components */}
           <div>{this.state.courses.map(course => <Course title={course.title} id={course._id} key={course._id} />)}</div>
           <div className="grid-33">
             <Link className="course--module course--add--module" to={"/courses/create"}>

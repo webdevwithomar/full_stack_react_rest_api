@@ -11,21 +11,19 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "nodemon": "^1.18.4"
+    "nodemon": "^1.18.9"
   },
   "dependencies": {
     "basic-auth": "^2.0.1",
-    "bcrypt": "^3.0.3",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
     "cors": "^2.8.5",
     "cross-env": "^5.2.0",
+    "encoding": "^0.1.12",
+    "event-stream": "^4.0.1",
     "express": "^4.16.4",
-    "express-session": "^1.15.6",
-    "joi": "^14.3.1",
-    "joi-objectid": "^2.0.0",
-    "mongodb": "^3.1.8",
-    "mongoose": "^5.4.3",
+    "mongodb": "^3.1.13",
+    "mongoose": "^5.4.7",
     "morgan": "^1.9.1",
     "promise.prototype.finally": "^3.1.0"
   }

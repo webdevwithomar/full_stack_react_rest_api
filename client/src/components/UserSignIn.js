@@ -1,52 +1,69 @@
-// imports
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import { withRouter } from "react-router-dom";
-import PropTypes from 'prop-types';
+import { Link, withRouter } from "react-router-dom";
+import { Consumer } from './Context'
 
 class UserSignIn extends Component {
 
-  static propTypes = {
-    user: PropTypes.object,
-    signIn: PropTypes.func
-  };
 
   state = {
-    emailAddress: '',
-    password: ''
-  }
-  onChange = event => {
-    this.setState({ [event.target.name]: event.target.value });
+    emailAddress: "",
+    password: "",
+    currentlySignedIn: false,
+    validationMessage: "",
+    loginError: ""
   }
 
-  onSubmit = event => {
-    event.preventDefault();
-    this.props.signIn(this.state.emailAddress, this.state.password, this.props.history);
+  //Looked at my own project 7 for reference
+  emailEntered = e => {
+    this.setState({ emailAddress: e.target.value });
   }
+
+  passwordEntered = e => {
+    this.setState({ password: e.target.value });
+  }
+
+  uponSubmit = e => {
+    e.preventDefault();
+    this.props.signIn(this.state.emailAddress, this.state.password)
+  }
+
 
   render() {
+    //https://auth0.com/blog/react-router-4-practical-tutorial/ -- information about taking user back to previous page after login
     return (
-      <div id="root">
-        <div>
-          <hr />
-          <div className="bounds">
-            <div className="grid-33 centered signin">
-              <h1>Sign In</h1>
-              <div>
-                <form onSubmit={this.onSubmit}>
-                  <div><input onChange={this.onChange} id="emailAddress" name="emailAddress" type="text" className="" placeholder="Email Address" /></div>
-                  <div><input onChange={this.onChange} id="password" name="password" type="password" className="" placeholder="Password" /></div>
-                  <div className="grid-100 pad-bottom"><button className="button" type="submit">Sign In</button><button onClick={() => this.props.history.push("/")} className="button button-secondary">Cancel</button></div>
-                </form>
+      <Consumer>
+        {context => {
+          if (context.currentlySignedIn) {
+            this.props.history.goBack();
+          }
+          return (
+            <div className="bounds">
+              <div className="grid-33 centered signin">
+                <h1>Sign In</h1>
+                <div>
+                  <div>
+                    <h2 className="validation--errors--label">{this.props.validationMessage}</h2>
+                    <div className="validation-errors">
+                      <ul><li>{this.props.loginError}</li></ul>
+                    </div>
+                  </div>
+                  <form onSubmit={this.uponSubmit}>
+                    <div><input onChange={this.emailEntered} id="emailAddress" name="emailAddress" type="text" className="" placeholder="Email Address" /></div>
+                    <div><input onChange={this.passwordEntered} id="password" name="password" type="password" className="" placeholder="Password" /></div>
+                    <div className="grid-100 pad-bottom">
+                      <button className="button" type="submit">Sign In</button>
+                      <Link to={"/"}><button className="button button-secondary">Cancel</button></Link>
+                    </div>
+                  </form>
+                </div>
+                <p>&nbsp;</p>
+                <p>Don't have a user account? <Link to={"/signup"}>Click here</Link> to sign up!</p>
               </div>
-              <p>&nbsp;</p>
-              <p>Don't have a user account? <Link to="/signup">Click Here</Link> to sign up!</p>
             </div>
-          </div>
-        </div>
-      </div>
+          )
+        }}
+      </Consumer>
     )
   }
 }
-
 export default withRouter(UserSignIn);

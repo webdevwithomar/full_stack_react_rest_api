@@ -1,4 +1,4 @@
-
+// Context API
 import React from 'react';
 
 const CoursesContext = React.createContext();

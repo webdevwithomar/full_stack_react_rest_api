@@ -1,8 +1,7 @@
 // imports
 import React, { Component } from 'react';
 import axios from "axios";
-import { withRouter } from "react-router-dom";
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from "react-router-dom";
 
 class UserSignUp extends Component {
 

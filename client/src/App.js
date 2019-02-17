@@ -1,21 +1,24 @@
-// imports
+// All the imports
 import React, { Component } from 'react';
-import axios from 'axios';
-import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
+import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
+import axios from "axios";
+// All Components
+import Header from './components/Header';
 import Courses from './components/Courses';
 import CourseDetail from './components/CourseDetail';
 import CreateCourse from './components/CreateCourse';
+import UpdateCourse from './components/UpdateCourse';
 import UserSignIn from './components/UserSignIn';
 import UserSignUp from './components/UserSignUp';
 import UserSignOut from './components/UserSignOut';
-import UpdateCourse from './components/UpdateCourse';
-import Header from './components/Header';
-import Forbidden from './components/Forbidden';
-import Error from './components/Error';
-import NotFound from './components/NotFound';
 import PrivateRouteCreate from './components/PrivateRouteCreate';
 import PrivateRouteUpdate from './components/PrivateRouteUpdate';
 import { Provider } from './components/Context';
+// Error
+import Forbidden from './components/Forbidden';
+import NotFound from './components/NotFound';
+import Error from './components/Error';
+// CSS
 import './App.css';
 
 class App extends Component {
@@ -38,34 +41,33 @@ class App extends Component {
     axios.get('http://localhost:5000/api/users', {
       auth: { username: emailAddress, password: password }
     })
-      .then(res => {
-        if (res.status === 200 || res.status === 304) {
+      .then(response => {
+        if (response.status === 200 || response.status === 304) {
           this.setState({
-            user: res.data,
+            user: response.data,
             currentlySignedIn: true,
             validationError: false,
             validationMessage: ""
           });
-
-          localStorage.setItem("user", JSON.stringify(res.data));
-          localStorage.setItem("auth", JSON.stringify(res.config.headers.Authorization));
+          localStorage.setItem("user", JSON.stringify(response.data));
+          localStorage.setItem("auth", JSON.stringify(response.config.headers.Authorization));
         }
       })
       .catch(error => {
-        if (error.res.status === 400) {
+        if (error.response.status === 400) {
           this.setState({ currentlySignedIn: false, validationError: true, validationMessage: "Validation Error" })
-          if (error.res.data.message === "Email must be correctly formatted (name@example.com)") {
-            this.setState({ emailFormatError: "Email must be correctly formatted (name@example.com)" })
+          if (error.response.data.message === "The email is not formatted correctly.") {
+            this.setState({ emailFormatError: "The email is not formatted correctly." })
           }
-          if (error.res.data.message === "Email address is required") {
+          if (error.response.data.message === "Email address is required") {
             this.setState({ emailMissing: "Email address is required" })
           }
-          if (error.res.data.message === "Password is required") {
+          if (error.response.data.message === "Password is required") {
             this.setState({ passwordMissing: "Password is required" })
           }
-        } else if (error.res.status === 401) {
-          this.setState({ validationError: true, validationMessage: "Error", loginError: error.res.data.message });
-        } else if (error.res.status === 500) {
+        } else if (error.response.status === 401) {
+          this.setState({ validationError: true, validationMessage: "Error", loginError: error.response.data.message });
+        } else if (error.response.status === 500) {
           this.state.history.push('/error');
         }
       });
@@ -73,7 +75,6 @@ class App extends Component {
 
 
   signOut = () => {
-    // Removing the email and pass from the global state
     this.setState({
       user: "",
       currentlySignedIn: false,
@@ -82,9 +83,8 @@ class App extends Component {
     localStorage.clear();
   }
 
-
+  // If not signed out, keep the user signed in
   componentDidMount() {
-    // Be logged in
     if (localStorage.user) {
       let user = JSON.parse(window.localStorage.getItem('user'));
       this.signIn(user.emailAddress, user.password)

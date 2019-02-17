@@ -13,6 +13,9 @@ import Header from './components/Header';
 import Forbidden from './components/Forbidden';
 import Error from './components/Error';
 import NotFound from './components/NotFound';
+import PrivateRouteCreate from './components/PrivateRouteCreate';
+import PrivateRouteUpdate from './components/PrivateRouteUpdate';
+import { Provider } from './components/Context';
 import './App.css';
 
 class App extends Component {

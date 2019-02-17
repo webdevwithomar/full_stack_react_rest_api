@@ -2,7 +2,7 @@ import React from "react";
 import { Link, NavLink } from "react-router-dom";
 import { Consumer } from "./Context";
 
-// If someone is signed in, they get a welcome message along with their name. If not, the sign in / up buttons get rendered
+// Buttons render on condition
 const Header = props => {
   return (
     <div className="header">
@@ -25,7 +25,6 @@ const Header = props => {
       </div>
     </div>
   )
-
 };
 
 export default Header;

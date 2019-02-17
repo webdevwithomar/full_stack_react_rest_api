@@ -2,9 +2,7 @@ import React, { Component } from 'react';
 import axios from "axios";
 import { Link, withRouter } from "react-router-dom";
 
-
 class CreateCourse extends Component {
-
   state = {
     userName: "",
     userId: "",
@@ -19,14 +17,13 @@ class CreateCourse extends Component {
     descriptionError: ""
   }
 
-  //Sets userName so that current user's name is listed as the course creator
+  // Sets course creators name
   componentDidMount() {
     this.setState({
       userName: `${this.props.user.firstName} ${this.props.user.lastName}`,
     })
   }
 
-  //When form is submitted, below functions set states for title, description, time and materials. Looked at my project 7
   titleEntered = e => {
     this.setState({ title: e.target.value });
   }
@@ -43,13 +40,11 @@ class CreateCourse extends Component {
     this.setState({ materialsNeeded: e.target.value });
   }
 
-  //When form is submitted, sends post request to add course with provided details to course list.
   uponSubmit = e => {
     e.preventDefault();
     this.createCourse(this.state.title, this.state.description, this.state.estimatedTime, this.state.materialsNeeded);
   }
 
-  //Sends user info along to authorize course creation
   createCourse = (title, description, estimatedTime, materialsNeeded) => {
     axios.post('http://localhost:5000/api/courses', {
       title: title,
@@ -61,11 +56,9 @@ class CreateCourse extends Component {
           'Authorization': JSON.parse(window.localStorage.getItem('auth'))
         }
       })
-      //Takes user to course list
       .then(response => {
         this.props.history.push(`/courses`);
       })
-      //If title or description is missing, displays corresponding validation error. If other error, displays Unhandled Error component
       .catch(error => {
         if (error.response.status === 400) {
           this.setState({ validationError: true, validationMessage: "Validation Error" });

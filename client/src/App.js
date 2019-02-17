@@ -20,7 +20,6 @@ import NotFound from './components/NotFound';
 import Error from './components/Error';
 // CSS
 import './App.css';
-import './global.css'
 
 class App extends Component {
   state = {
@@ -73,7 +72,6 @@ class App extends Component {
         }
       });
   }
-
 
   signOut = () => {
     this.setState({

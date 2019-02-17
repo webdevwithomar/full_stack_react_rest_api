@@ -3,8 +3,6 @@ import { Link, withRouter } from "react-router-dom";
 import axios from "axios";
 
 class UserSignUp extends Component {
-
-
   state = {
     firstName: "",
     lastName: "",
@@ -42,7 +40,7 @@ class UserSignUp extends Component {
     this.setState({ confirmPassword: e.target.value });
   }
 
-  //Compares two passwords, if they don't match it sets a validation error and won't let signup happen
+  // Compares passwords
   checkPasswords = () => {
     if (this.state.password !== this.state.confirmPassword) {
       this.setState({ validationError: true, validationMessage: "Validation Error", passwordMismatch: "Passwords do not match" })
@@ -52,7 +50,6 @@ class UserSignUp extends Component {
     }
   }
 
-  //If passwords match, signs up user
   uponSubmit = e => {
     e.preventDefault();
     if (this.checkPasswords()) {
@@ -67,15 +64,12 @@ class UserSignUp extends Component {
       emailAddress: emailAddress,
       password: password
     })
-      //After adding them to database, signs them in
       .then(response => {
         this.props.signIn(this.state.emailAddress, this.state.password);
       })
-      //Takes them back to where they were
       .then(response => {
         this.props.history.goBack();
       })
-      //Catches validation errors, displays appropriate messages
       .catch(error => {
         if (error.response.status === 400) {
           this.setState({ validationError: true, validationMessage: "Validation Error" });

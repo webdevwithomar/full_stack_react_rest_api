@@ -3,8 +3,6 @@ import { Link, withRouter } from "react-router-dom";
 import axios from 'axios';
 
 class UpdateCourse extends Component {
-
-
   state = {
     courses: [],
     userName: "",
@@ -19,7 +17,6 @@ class UpdateCourse extends Component {
     descriptionError: ""
   }
 
-  //When page loads, gets course that corresponds to given ID
   componentDidMount() {
     axios.get(`http://localhost:5000/api/courses/${this.props.match.params.id}`)
       .then(response => {
@@ -45,7 +42,6 @@ class UpdateCourse extends Component {
       })
   }
 
-  //When changes are submitted, set states of course details
   titleChanged = e => {
     this.setState({ title: e.target.value });
   }
@@ -62,7 +58,6 @@ class UpdateCourse extends Component {
     this.setState({ materialsNeeded: e.target.value });
   }
 
-  //Puts changes then takes user to corresponding course detail page
   updateCourse = (courseId, title, description, estimatedTime, materialsNeeded) => {
     axios.put(`http://localhost:5000/api/courses/${courseId}`, {
       title: title,
@@ -70,12 +65,11 @@ class UpdateCourse extends Component {
       estimatedTime: estimatedTime,
       materialsNeeded: materialsNeeded
     }, {
-      headers: { 'Authorization': JSON.parse(window.localStorage.getItem('auth')) }
+        headers: { 'Authorization': JSON.parse(window.localStorage.getItem('auth')) }
       })
       .then(response => {
         this.props.history.push(`/courses/${courseId}`)
       })
-      // Handles missing title or description
       .catch(error => {
         if (error.response.status === 400) {
           this.setState({ validationError: true, validationMessage: "Validation Error" });
@@ -105,7 +99,6 @@ class UpdateCourse extends Component {
       <div className="bounds course--detail">
         <h1>Update Course</h1>
         <div>
-          {/*Div for validation errors if needed*/}
           <div>
             <h2 className="validation--errors--label">{this.state.validationMessage}</h2>
             <div className="validation-errors">

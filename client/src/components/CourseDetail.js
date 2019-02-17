@@ -17,21 +17,21 @@ class CourseDetail extends Component {
 
   componentDidMount() {
     axios.get(`http://localhost:5000/api/courses/${this.props.match.params.id}`)
-      .then(response => {
+      .then(res => {
         this.setState({
-          courseId: response.data._id,
-          userName: `${response.data.user[0].firstName} ${response.data.user[0].lastName}`,
-          userId: response.data.user[0]._id,
-          title: response.data.title,
-          description: response.data.description,
-          estimatedTime: response.data.estimatedTime,
-          materialsNeeded: response.data.materialsNeeded
+          courseId: res.data._id,
+          userName: `${res.data.user[0].firstName} ${res.data.user[0].lastName}`,
+          userId: res.data.user[0]._id,
+          title: res.data.title,
+          description: res.data.description,
+          estimatedTime: res.data.estimatedTime,
+          materialsNeeded: res.data.materialsNeeded
         });
       })
       .catch(error => {
-        if (error.response.status === 404) {
+        if (error.res.status === 404) {
           this.props.history.push('/notfound');
-        } else if (error.response.status === 500) {
+        } else if (error.res.status === 500) {
           this.props.history.push('/error');
         }
       });
@@ -44,16 +44,16 @@ class CourseDetail extends Component {
         'Authorization': JSON.parse(window.localStorage.getItem('auth'))
       }
     })
-      .then(response => {
+      .then(res => {
         this.props.history.push(`/courses`);
         window.location.reload();
       })
       .catch(error => {
-        if (error.response.status === 404) {
+        if (error.res.status === 404) {
           this.props.history.push('/notfound');
-        } else if (error.response.status === 403) {
+        } else if (error.res.status === 403) {
           this.props.history.push('forbidden')
-        } else if (error.response.status === 500) {
+        } else if (error.res.status === 500) {
           this.props.history.push('/error');
         }
       })

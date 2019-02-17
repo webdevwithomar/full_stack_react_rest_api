@@ -3,8 +3,6 @@ import { Link, withRouter } from "react-router-dom";
 import { Consumer } from './Context'
 
 class UserSignIn extends Component {
-
-
   state = {
     emailAddress: "",
     password: "",
@@ -13,7 +11,6 @@ class UserSignIn extends Component {
     loginError: ""
   }
 
-  //Looked at my own project 7 for reference
   emailEntered = e => {
     this.setState({ emailAddress: e.target.value });
   }
@@ -27,9 +24,7 @@ class UserSignIn extends Component {
     this.props.signIn(this.state.emailAddress, this.state.password)
   }
 
-
   render() {
-    //https://auth0.com/blog/react-router-4-practical-tutorial/ -- information about taking user back to previous page after login
     return (
       <Consumer>
         {context => {
@@ -66,4 +61,5 @@ class UserSignIn extends Component {
     )
   }
 }
+
 export default withRouter(UserSignIn);

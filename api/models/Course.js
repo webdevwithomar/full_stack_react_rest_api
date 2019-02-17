@@ -4,10 +4,10 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const CourseSchema = new Schema({
-  user:  [{
-           type: mongoose.Schema.Types.ObjectId,
-           ref: "User"
-         }],
+  user: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User"
+  }],
   title: String,
   description: String,
   estimatedTime: String,

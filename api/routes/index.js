@@ -26,7 +26,6 @@ router.get('/', (req, res) => {
 });
 
 // GET /courses
-// route for courses collection
 router.get('/api/courses', (req, res, next) => {
   Course.find({})
     .exec((err, listCourses) => {
@@ -35,8 +34,7 @@ router.get('/api/courses', (req, res, next) => {
     });
 });
 
-// GET /course--Route for course
-// use .populate() to achieve the extra credit part 3
+// GET /course
 router.get('/api/courses/:id', (req, res, next) => {
   const courseId = req.params.id;
   Course.findById(courseId).
@@ -48,8 +46,6 @@ router.get('/api/courses/:id', (req, res, next) => {
 });
 
 // POST /courses
-// route for courses collection
-
 router.post('/api/courses', middle.requiresLogin, function (req, res, next) {
   const courseProps = req.body;
   const { error } = validateCourse(courseProps);
@@ -65,7 +61,6 @@ router.post('/api/courses', middle.requiresLogin, function (req, res, next) {
 });
 
 // PUT /courses
-// route for courses collection
 router.put('/api/courses/:cID', middle.requiresLogin, function (req, res) {
   const credential = auth(req);
   const courseProps = req.body;
@@ -88,7 +83,6 @@ router.put('/api/courses/:cID', middle.requiresLogin, function (req, res) {
 });
 
 // DELETE /courses
-// route for courses collection
 router.delete("/api/courses/:cID", middle.requiresLogin, function (req, res) {
   const credential = auth(req);
   const courseProps = req.body;
@@ -113,7 +107,6 @@ router.delete("/api/courses/:cID", middle.requiresLogin, function (req, res) {
 });
 
 // GET /users
-// route for users collection
 router.get('/api/users', middle.requiresLogin, (req, res, next) => {
   const credential = auth(req);
   const courseProps = req.body;
@@ -125,8 +118,6 @@ router.get('/api/users', middle.requiresLogin, (req, res, next) => {
 });
 
 // POST /users
-// route for users collection
-
 router.post('/api/users', function (req, res, next) {
   const userProps = req.body;
   User.findOne({ emailAddress: userProps.emailAddress })

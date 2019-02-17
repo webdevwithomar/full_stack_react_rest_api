@@ -51,10 +51,6 @@ class CreateCourse extends Component {
       const user = this.props.user.idUserLogin;
 
       axios.post("http://localhost:5000/api/courses", {}, {
-        // auth: {
-        //   username: 'pasha@gmail.com',
-        //   password: '12345'
-        // },
         data: {
           title: title,
           description: description,
@@ -103,7 +99,7 @@ class CreateCourse extends Component {
             </div>
           </div>
         </div>
-        <form onSubmit={this.onSubmit}>
+        <form onSubmit={this.onSubmit.bind(this)}>
           <div className="grid-66">
             <div className="course--header">
               <h4 className="course--label">Course</h4>

@@ -9,7 +9,10 @@ import UserSignIn from './components/UserSignIn';
 import UserSignUp from './components/UserSignUp';
 import UserSignOut from './components/UserSignOut';
 import UpdateCourse from './components/UpdateCourse';
-import Header from './components/Header'
+import Header from './components/Header';
+import Forbidden from './components/Forbidden';
+import Error from './components/Error';
+import NotFound from './components/NotFound';
 import './App.css';
 
 class App extends Component {
@@ -67,6 +70,9 @@ class App extends Component {
             <Route path="/signin" render={props => <UserSignIn signIn={this.signIn} history={props.path} />} />
             <Route path="/signup" render={() => loggedIn ? (<Redirect to="/" />) : (<UserSignUp />)} />
             <Route path="/signout" render={props => <UserSignOut />} />
+            <Route path="/forbidden" render={props => <Forbidden />} />
+            <Route path="/error" render={props => <Error />} />
+            <Route component={NotFound} />
           </Switch>
         </div>
       </BrowserRouter>
